@@ -2115,6 +2115,31 @@
     )
   )
 
+  (symbol (lib_id "Connector:TestPoint") (at 106.68 118.11 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
+    (uuid 6425f1e3-9ef4-4420-84bd-f31951e1902e)
+    (property "Reference" "TP9" (at 106.68 109.22 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Value" "GND" (at 106.68 111.76 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "TestPoint:TestPoint_Pad_D2.0mm" (at 111.76 118.11 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 111.76 118.11 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid b1a2589f-2123-40f4-a650-88496aacbac8))
+    (instances
+      (project "line"
+        (path "/2b625d23-24b6-4053-9c0b-d9a46cc4ab31"
+          (reference "TP9") (unit 1)
+        )
+      )
+    )
+  )
+
   (symbol (lib_id "Device:D_Schottky") (at 157.48 97.79 270) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 643598cb-41ba-45cd-b3c9-a34de778e196)
@@ -2671,6 +2696,31 @@
       (project "line"
         (path "/2b625d23-24b6-4053-9c0b-d9a46cc4ab31"
           (reference "TP1") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "power:GND") (at 106.68 118.11 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid cd7ea3f2-13e1-49ed-be9a-0f1037e0ce6c)
+    (property "Reference" "#PWR016" (at 106.68 124.46 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Value" "GND" (at 106.68 122.2455 0)
+      (effects (font (size 1.27 1.27)))
+    )
+    (property "Footprint" "" (at 106.68 118.11 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "" (at 106.68 118.11 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 62f7f9c3-2d19-4136-86c6-956d9216cf84))
+    (instances
+      (project "line"
+        (path "/2b625d23-24b6-4053-9c0b-d9a46cc4ab31"
+          (reference "#PWR016") (unit 1)
         )
       )
     )
