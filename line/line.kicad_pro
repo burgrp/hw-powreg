@@ -190,7 +190,10 @@
     "equivalence_files": []
   },
   "erc": {
-    "erc_exclusions": [],
+    "erc_exclusions": [
+      "power_pin_not_driven|660400|1155700|b65fd252-962e-4d14-8ab6-afd10e17ecf4|00000000-0000-0000-0000-000000000000|/2b625d23-24b6-4053-9c0b-d9a46cc4ab31|/2b625d23-24b6-4053-9c0b-d9a46cc4ab31|",
+      "power_pin_not_driven|660400|1308100|41061847-9a7a-497b-901d-259d7f6c626a|00000000-0000-0000-0000-000000000000|/2b625d23-24b6-4053-9c0b-d9a46cc4ab31|/2b625d23-24b6-4053-9c0b-d9a46cc4ab31|"
+    ],
     "meta": {
       "version": 0
     },
@@ -426,23 +429,6 @@
         "via_diameter": 0.8,
         "via_drill": 0.4,
         "wire_width": 6
-      },
-      {
-        "bus_width": 12,
-        "clearance": 1.0,
-        "diff_pair_gap": 0.25,
-        "diff_pair_via_gap": 0.25,
-        "diff_pair_width": 0.2,
-        "line_style": 0,
-        "microvia_diameter": 0.3,
-        "microvia_drill": 0.1,
-        "name": "Power",
-        "pcb_color": "rgba(0, 0, 0, 0.000)",
-        "schematic_color": "rgb(194, 0, 0)",
-        "track_width": 5.0,
-        "via_diameter": 0.8,
-        "via_drill": 0.4,
-        "wire_width": 12
       }
     ],
     "meta": {
@@ -450,16 +436,7 @@
     },
     "net_colors": null,
     "netclass_assignments": null,
-    "netclass_patterns": [
-      {
-        "netclass": "Power",
-        "pattern": "/MAINS_L_*"
-      },
-      {
-        "netclass": "Power",
-        "pattern": "/S2S"
-      }
-    ]
+    "netclass_patterns": []
   },
   "pcbnew": {
     "last_paths": {
