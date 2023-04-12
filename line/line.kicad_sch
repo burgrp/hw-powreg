@@ -985,7 +985,6 @@
     )
   )
 
-
   (junction (at 130.81 66.04) (diameter 0) (color 0 0 0 0)
     (uuid 10bf0fc2-ee5b-4294-bfa9-c744d64901d7)
   )
@@ -1458,7 +1457,7 @@
     (property "Reference" "J2" (at 179.07 111.2901 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "CONTROL" (at 179.07 113.2111 0)
+    (property "Value" "PWM" (at 179.07 113.2111 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Footprint" "Drake:DG301-5.0-02" (at 179.07 118.11 0)
