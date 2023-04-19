@@ -1,4 +1,4 @@
-(kicad_sch (version 20230221) (generator eeschema)
+(kicad_sch (version 20230409) (generator eeschema)
 
   (uuid 2b625d23-24b6-4053-9c0b-d9a46cc4ab31)
 
@@ -1367,7 +1367,8 @@
     (uuid fcf924f9-6319-4790-9c06-4b41d00fa870)
   )
 
-  (text "https://tinyurl.com/2y7xszn5" (at 177.8 162.56 0)
+  (text "https://tinyurl.com/2y7xszn5" (exclude_from_sim no)
+ (at 177.8 162.56 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid ba4dda00-88cf-4eea-b65f-bde0caacf640)
   )
@@ -1906,13 +1907,13 @@
     (property "Reference" "D2" (at 59.182 81.9063 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "SMAZ20-13-F" (at 59.182 83.8273 90)
+    (property "Value" "1SMA4747A" (at 59.182 83.8273 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
     (property "Footprint" "Diode_SMD:D_SMA_Handsoldering" (at 57.15 82.55 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "https://www.tme.eu/Document/834adb1f38dda1a8a8e74929a7ec261d/SMAZx-13-F.pdf" (at 57.15 82.55 0)
+    (property "Datasheet" "https://datasheet.lcsc.com/lcsc/1912111437_LGE-1SMA4747A_C362318.pdf" (at 57.15 82.55 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (pin "1" (uuid f9b78241-2c5b-4b6f-bb2d-8d448469e4e8))
@@ -2249,7 +2250,7 @@
     (property "Reference" "D1" (at 49.53 59.2201 0)
       (effects (font (size 1.27 1.27)))
     )
-    (property "Value" "BYG10J (J/K/M/Y)" (at 49.53 61.1411 0)
+    (property "Value" "ES1J" (at 49.53 61.1411 0)
       (effects (font (size 1.27 1.27)))
     )
     (property "Footprint" "Diode_SMD:D_SMA_Handsoldering" (at 49.53 63.5 0)
@@ -2994,8 +2995,8 @@
     (property "Datasheet" "~" (at 67.31 74.93 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid c2917604-f946-4eed-bd02-543745927438))
-    (pin "2" (uuid f50e1130-3db8-496b-bc4a-443132748308))
+    (pin "1" (uuid 7481aeb5-3b12-4e10-bd0a-108cb19af346))
+    (pin "2" (uuid e9929bb5-c129-464b-b3d3-7d7733b6dc8f))
     (instances
       (project "line"
         (path "/2b625d23-24b6-4053-9c0b-d9a46cc4ab31"
