@@ -1,7 +1,7 @@
 const std = @import("std");
 
 const microzig = @import("deps/microzig/build.zig");
-const avr = @import("src/avr");
+const chips = @import("src/avr/chips.zig");
 
 pub fn build(b: *std.build.Builder) !void {
     const optimize = b.standardOptimizeOption(.{});
@@ -11,8 +11,7 @@ pub fn build(b: *std.build.Builder) !void {
             .path = "src/main.zig",
         },
         .backing = .{
-            // .board = atmega.boards.arduino_nano,
-            .chip = avr.chips.attiny412,
+            .chip = chips.attiny412,
         },
         .optimize = optimize,
     });

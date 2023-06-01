@@ -1,0 +1,105 @@
+
+zig-out/bin/app:     file format elf32-avr
+
+
+Disassembly of section .text:
+
+00000000 <vector_table>:
+   0:	0c 94 45 00 	jmp	0x8a	; 0x8a <microzig_start>
+   4:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+   8:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+   c:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  10:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  14:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  18:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  1c:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  20:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  24:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  28:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  2c:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  30:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  34:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  38:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  3c:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  40:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  44:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  48:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  4c:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  50:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  54:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  58:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  5c:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+  60:	0c 94 43 00 	jmp	0x86	; 0x86 <microzig_unhandled_vector>
+
+00000064 <microzig_main>:
+  64:	0e 94 34 00 	call	0x68	; 0x68 <main.main>
+
+00000068 <main.main>:
+  68:	1f 93       	push	r17
+  6a:	18 e0       	ldi	r17, 0x08	; 8
+  6c:	10 93 00 04 	sts	0x0400, r17	; 0x800400 <microzig_data_end+0x7fc500>
+  70:	10 93 04 04 	sts	0x0404, r17	; 0x800404 <microzig_data_end+0x7fc504>
+  74:	0e 94 5d 00 	call	0xba	; 0xba <main.busyloop>
+  78:	10 92 04 04 	sts	0x0404, r1	; 0x800404 <microzig_data_end+0x7fc504>
+  7c:	0e 94 5d 00 	call	0xba	; 0xba <main.busyloop>
+  80:	f7 cf       	rjmp	.-18     	; 0x70 <main.main+0x8>
+
+00000082 <microzig.hang>:
+  82:	f8 94       	cli
+  84:	ff cf       	rjmp	.-2      	; 0x84 <microzig.hang+0x2>
+
+00000086 <microzig_unhandled_vector>:
+  86:	0e 94 41 00 	call	0x82	; 0x82 <microzig.hang>
+
+0000008a <microzig_start>:
+  8a:	e0 ef       	ldi	r30, 0xF0	; 240
+  8c:	f0 e0       	ldi	r31, 0x00	; 0
+  8e:	a0 e0       	ldi	r26, 0x00	; 0
+  90:	bf e3       	ldi	r27, 0x3F	; 63
+  92:	80 e0       	ldi	r24, 0x00	; 0
+  94:	9f e3       	ldi	r25, 0x3F	; 63
+  96:	02 c0       	rjmp	.+4      	; 0x9c <microzig_start+0x12>
+  98:	25 91       	lpm	r18, Z+
+  9a:	2d 93       	st	X+, r18
+  9c:	a8 17       	cp	r26, r24
+  9e:	b9 07       	cpc	r27, r25
+  a0:	d9 f7       	brne	.-10     	; 0x98 <microzig_start+0xe>
+  a2:	a0 e0       	ldi	r26, 0x00	; 0
+  a4:	bf e3       	ldi	r27, 0x3F	; 63
+  a6:	80 e0       	ldi	r24, 0x00	; 0
+  a8:	9f e3       	ldi	r25, 0x3F	; 63
+  aa:	20 e0       	ldi	r18, 0x00	; 0
+  ac:	01 c0       	rjmp	.+2      	; 0xb0 <microzig_start+0x26>
+  ae:	2d 93       	st	X+, r18
+  b0:	a8 17       	cp	r26, r24
+  b2:	b9 07       	cpc	r27, r25
+  b4:	e1 f7       	brne	.-8      	; 0xae <microzig_start+0x24>
+  b6:	0e 94 32 00 	call	0x64	; 0x64 <microzig_main>
+
+000000ba <main.busyloop>:
+  ba:	80 e0       	ldi	r24, 0x00	; 0
+  bc:	90 e0       	ldi	r25, 0x00	; 0
+  be:	26 e8       	ldi	r18, 0x86	; 134
+  c0:	41 e0       	ldi	r20, 0x01	; 1
+  c2:	50 e0       	ldi	r21, 0x00	; 0
+  c4:	34 e0       	ldi	r19, 0x04	; 4
+  c6:	bc 01       	movw	r22, r24
+  c8:	db 01       	movw	r26, r22
+  ca:	b0 70       	andi	r27, 0x00	; 0
+  cc:	e1 e0       	ldi	r30, 0x01	; 1
+  ce:	80 3a       	cpi	r24, 0xA0	; 160
+  d0:	92 07       	cpc	r25, r18
+  d2:	a4 07       	cpc	r26, r20
+  d4:	b5 07       	cpc	r27, r21
+  d6:	08 f4       	brcc	.+2      	; 0xda <main.busyloop+0x20>
+  d8:	e1 2d       	mov	r30, r1
+  da:	e1 70       	andi	r30, 0x01	; 1
+  dc:	e0 30       	cpi	r30, 0x00	; 0
+  de:	39 f4       	brne	.+14     	; 0xee <main.busyloop+0x34>
+  e0:	30 93 05 04 	sts	0x0405, r19	; 0x800405 <microzig_data_end+0x7fc505>
+  e4:	8f 5f       	subi	r24, 0xFF	; 255
+  e6:	9f 4f       	sbci	r25, 0xFF	; 255
+  e8:	6f 4f       	sbci	r22, 0xFF	; 255
+  ea:	7f 4f       	sbci	r23, 0xFF	; 255
+  ec:	ed cf       	rjmp	.-38     	; 0xc8 <main.busyloop+0xe>
+  ee:	08 95       	ret

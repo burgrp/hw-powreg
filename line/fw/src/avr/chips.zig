@@ -1,5 +1,5 @@
 const std = @import("std");
-const micro = @import("../deps/microzig/build.zig");
+const micro = @import("../../deps/microzig/build.zig");
 const Chip = micro.Chip;
 const MemoryRegion = micro.MemoryRegion;
 
@@ -9,20 +9,26 @@ fn root_dir() []const u8 {
     return std.fs.path.dirname(@src().file) orelse ".";
 }
 
-pub const attiny412 = Chip.from_standard_paths(root_dir(), .{
+pub const attiny412 = Chip{
     .name = "ATtiny412",
     .cpu = micro.cpus.avr5,
     .memory_regions = &.{
         MemoryRegion{ .offset = 0x00000000, .length = 0x1000, .kind = .flash },
         MemoryRegion{ .offset = 0x3f00, .length = 0x0100, .kind = .ram },
     },
-});
+    .source = .{
+        .path = root_dir() ++ "/chips/ATtiny412.zig",
+    },
+};
 
-pub const attiny414 = Chip.from_standard_paths(root_dir(), .{
+pub const attiny414 = Chip{
     .name = "ATtiny414",
     .cpu = micro.cpus.avr5,
     .memory_regions = &.{
         MemoryRegion{ .offset = 0x00000000, .length = 0x1000, .kind = .flash },
         MemoryRegion{ .offset = 0x3f00, .length = 0x0100, .kind = .ram },
     },
-});
+    .source = .{
+        .path = root_dir() ++ "/chips/ATtiny414.zig",
+    },
+};

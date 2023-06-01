@@ -1,24 +1,21 @@
-const std = @import("std");
+const micro = @import("microzig");
 
-pub fn main() !void {
-    // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
-    std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
-
-    // stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
-
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
-
-    try bw.flush(); // don't forget to flush!
+pub fn main() void {
+    // blink
+    micro.chip.peripherals.PORTA.DIR = 1 << 3;
+    while (true) {
+        micro.chip.peripherals.PORTA.OUT = 1 << 3;
+        busyloop();
+        micro.chip.peripherals.PORTA.OUT = 0;
+        busyloop();
+    }
 }
 
-test "simple test" {
-    var list = std.ArrayList(i32).init(std.testing.allocator);
-    defer list.deinit(); // try commenting this out and see if zig detects the memory leak!
-    try list.append(42);
-    try std.testing.expectEqual(@as(i32, 42), list.pop());
+fn busyloop() void {
+    const limit = 100_000;
+
+    var i: u24 = 0;
+    while (i < limit) : (i += 1) {
+        micro.chip.peripherals.PORTA.OUTSET = 1 << 2;
+    }
 }

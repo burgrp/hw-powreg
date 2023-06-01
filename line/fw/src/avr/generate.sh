@@ -4,7 +4,7 @@ set -e
 
     cat >chips.zig <<EOF
 const std = @import("std");
-const micro = @import("../deps/microzig/build.zig");
+const micro = @import("../../deps/microzig/build.zig");
 const Chip = micro.Chip;
 const MemoryRegion = micro.MemoryRegion;
 
@@ -31,14 +31,17 @@ do
 
     cat >>chips.zig <<EOF
 
-pub const $ZIG_VAR = Chip.from_standard_paths(root_dir(), .{
+pub const $ZIG_VAR = Chip{
     .name = "$ZIG_NAME",
     .cpu = micro.cpus.avr5,
     .memory_regions = &.{
         $DECL_FLASH
         $DECL_RAM
     },
-});
+    .source = .{
+        .path = root_dir() ++ "/$GEN_ZIG",
+    },
+};
 EOF
 
 done

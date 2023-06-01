@@ -4,9 +4,9 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "zig build",
+            "label": "zig flash",
             "type": "shell",
-            "command": "zig build -Doptimize=ReleaseSmall",
+            "command": "make flash",
             "problemMatcher": [
                 "$zig"
             ],
