@@ -41,6 +41,9 @@ pub const $ZIG_VAR = Chip{
     .source = .{
         .path = root_dir() ++ "/$GEN_ZIG",
     },
+    .json_register_schema = .{
+        .path = root_dir() ++ "/$GEN_JSON",
+    },
 };
 EOF
 

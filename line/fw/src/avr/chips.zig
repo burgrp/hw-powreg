@@ -19,6 +19,9 @@ pub const attiny412 = Chip{
     .source = .{
         .path = root_dir() ++ "/chips/ATtiny412.zig",
     },
+    .json_register_schema = .{
+        .path = root_dir() ++ "/chips/ATtiny412.json",
+    },
 };
 
 pub const attiny414 = Chip{
@@ -30,5 +33,8 @@ pub const attiny414 = Chip{
     },
     .source = .{
         .path = root_dir() ++ "/chips/ATtiny414.zig",
+    },
+    .json_register_schema = .{
+        .path = root_dir() ++ "/chips/ATtiny414.json",
     },
 };

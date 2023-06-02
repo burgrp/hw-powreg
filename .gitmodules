@@ -4,3 +4,6 @@
 [submodule "line/fw/deps/microchip-atmega"]
 	path = line/fw/deps/microchip-atmega
 	url = git@github.com:burgrp/microchip-atmega.git
+[submodule "line/fw/deps/microzig-avr"]
+	path = line/fw/deps/microzig-avr
+	url = git@github.com:burgrp/microzig-avr.git
