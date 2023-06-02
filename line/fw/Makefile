@@ -5,7 +5,7 @@ all: flash
 
 .PHONY: build
 build:
-	zig build -Doptimize=ReleaseSmall
+	zig build
 	avr-objdump zig-out/bin/app -d > zig-out/bin/app.lst
 	avr-size zig-out/bin/app
 
