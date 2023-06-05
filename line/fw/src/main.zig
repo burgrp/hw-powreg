@@ -1,6 +1,6 @@
 const microzig = @import("microzig");
 
-const gate = @import("gate.zig");
+const Gate = @import("gate.zig");
 
 //const peripherals = @import("../deps/microzig-avr/src/chips/ATtiny412.zig").devices.ATtiny412.peripherals;
 const peripherals = microzig.chip.peripherals;
@@ -65,9 +65,12 @@ pub const microzig_options = struct {
 };
 
 pub fn main() void {
-    const g = gate.create(microzig.chip.peripherals.PORTA, GATE_PIN);
-    g.init();
-    g.setDuty(50);
+    var gate = Gate{
+        .port = microzig.chip.peripherals.PORTA,
+        .pin = GATE_PIN,
+    };
+    gate.init();
+    gate.setDuty(50);
 
     peripherals.PORTA.DIRSET = (1 << ERR_PIN);
     peripherals.PORTA.PIN1CTRL.modify(.{ .PULLUPEN = 0, .ISC = .{ .value = .BOTHEDGES } });
