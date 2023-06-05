@@ -39,8 +39,8 @@ pub const microzig_options = struct {
             if (peripherals.TCA0.SINGLE.CTRLA.read().ENABLE == 1) {
                 period = peripherals.TCA0.SINGLE.CNT;
 
-//peripherals.PORTA.OUTSET = 1 << GATE_PIN;
-                peripherals.TCA0.SINGLE.CMP0 = 1000;//period / 16;
+                //peripherals.PORTA.OUTSET = 1 << GATE_PIN;
+                peripherals.TCA0.SINGLE.CMP0 = 1000; //period / 16;
                 peripherals.TCA0.SINGLE.CMP1 = period / 4;
             }
 
@@ -69,6 +69,9 @@ pub fn main() void {
     peripherals.TCA0.SINGLE.CTRLA.modify(.{ .ENABLE = 0, .CLKSEL = .{ .value = .DIV4 } });
     peripherals.TCA0.SINGLE.INTCTRL.modify(.{ .OVF = 1, .CMP0 = 1, .CMP1 = 1 });
 
+    // show error
+    peripherals.PORTA.OUTSET = 1 << ERR_PIN;
+
     micro.cpu.enable_interrupts();
 
     peripherals.SLPCTRL.CTRLA.modify(.{ .SMODE = .{ .value = .IDLE }, .SEN = 1 });
@@ -76,7 +79,3 @@ pub fn main() void {
         asm volatile ("sleep");
     }
 }
-
-// export fn foo(a: u8, b: u16) i32 {
-//     return a * b / 256;
-// }
