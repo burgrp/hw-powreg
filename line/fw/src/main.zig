@@ -1,11 +1,18 @@
-const micro = @import("microzig");
+const microzig = @import("microzig");
+
+const gate = @import("gate.zig");
 
 //const peripherals = @import("../deps/microzig-avr/src/chips/ATtiny412.zig").devices.ATtiny412.peripherals;
-const peripherals = micro.chip.peripherals;
+const peripherals = microzig.chip.peripherals;
 
 const GATE_PIN = 3;
 const ERR_PIN = 2;
 const ZCD_PIN = 1;
+
+// var gate = Gate{
+//     .port = microzig.chip.peripherals.PORTA,
+//     .pin = GATE_PIN,
+// };
 
 var period: u16 = 0;
 
@@ -58,7 +65,11 @@ pub const microzig_options = struct {
 };
 
 pub fn main() void {
-    peripherals.PORTA.DIR = (1 << GATE_PIN) | (1 << ERR_PIN);
+    const g = gate.create(microzig.chip.peripherals.PORTA, GATE_PIN);
+    g.init();
+    g.setDuty(50);
+
+    peripherals.PORTA.DIRSET = (1 << ERR_PIN);
     peripherals.PORTA.PIN1CTRL.modify(.{ .PULLUPEN = 0, .ISC = .{ .value = .BOTHEDGES } });
 
     // CPU at 10MHz
@@ -72,7 +83,7 @@ pub fn main() void {
     // show error
     peripherals.PORTA.OUTSET = 1 << ERR_PIN;
 
-    micro.cpu.enable_interrupts();
+    microzig.cpu.enable_interrupts();
 
     peripherals.SLPCTRL.CTRLA.modify(.{ .SMODE = .{ .value = .IDLE }, .SEN = 1 });
     while (true) {
