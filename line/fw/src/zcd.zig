@@ -25,8 +25,8 @@ pub fn at(comptime comparator: *volatile microzig.chip.types.peripherals.AC, com
 
         pub fn handleInterruptAC() void {
             if (comparator.STATUS.read().CMP == 1) {
-                zeroCrossHandler();
                 comparator.STATUS.modify(.{ .CMP = 1 });
+                zeroCrossHandler();
             }
         }
     };

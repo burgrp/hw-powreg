@@ -2,15 +2,17 @@ const microzig = @import("microzig");
 
 const Gate = @import("gate.zig");
 const ZCD = @import("zcd.zig");
+const Status = @import("status.zig");
 
 //const peripherals = @import("../deps/microzig-avr/src/chips/ATtiny412.zig").devices.ATtiny412.peripherals;
 const peripherals = microzig.chip.peripherals;
 
+const STATUS_PIN = 2;
 const GATE_PIN = 3;
-const ERR_PIN = 2;
 const ZCD_PIN = 1;
 
-const gate = Gate.at(peripherals.TCA0, peripherals.PORTA, GATE_PIN);
+const status = Status.at(peripherals.PORTA, STATUS_PIN);
+const gate = Gate.at(peripherals.TCA0, peripherals.PORTA, GATE_PIN, status.gateStatus);
 const zcd = ZCD.at(peripherals.AC0, peripherals.VREF, gate.zeroCross);
 
 pub const microzig_options = struct {
@@ -24,7 +26,7 @@ pub const microzig_options = struct {
         pub fn TCA0_CMP1() void {
             gate.handleInterruptTCA_CMP1();
         }
-        pub fn AC0_AC() void {
+        pub fn AC0_AC() callconv(.Interrupt) void {
             zcd.handleInterruptAC();
         }
     };
@@ -35,15 +37,12 @@ pub fn main() void {
     peripherals.CPU.CCP.write_raw(0xD8);
     peripherals.CLKCTRL.MCLKCTRLB.modify(.{ .PDIV = .{ .value = .@"2X" } });
 
+    status.init();
+
     gate.init();
-    gate.setDuty(50);
+    gate.setDuty(0x10);
 
     zcd.init();
-
-    peripherals.PORTA.DIRSET = (1 << ERR_PIN);
-
-    // show error
-    peripherals.PORTA.OUTSET = 1 << ERR_PIN;
 
     microzig.cpu.enable_interrupts();
 
