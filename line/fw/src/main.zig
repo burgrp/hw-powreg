@@ -10,22 +10,22 @@ const GATE_PIN = 3;
 const ERR_PIN = 2;
 const ZCD_PIN = 1;
 
-const gate = Gate.at(microzig.chip.peripherals.TCA0, microzig.chip.peripherals.PORTA, GATE_PIN);
-const zcd = ZCD.at(microzig.chip.peripherals.PORTA, ZCD_PIN, gate.zeroCross);
+const gate = Gate.at(peripherals.TCA0, peripherals.PORTA, GATE_PIN);
+const zcd = ZCD.at(peripherals.AC0, peripherals.VREF, gate.zeroCross);
 
 pub const microzig_options = struct {
     pub const interrupts = struct {
         pub fn TCA0_LUNF() void {
-            gate.handleTimerOVF();
+            gate.handleInterruptTCA_OVF();
         }
         pub fn TCA0_CMP0() void {
-            gate.handleTimerCMP0();
+            gate.handleInterruptTCA_CMP0();
         }
         pub fn TCA0_CMP1() void {
-            gate.handleTimerCMP1();
+            gate.handleInterruptTCA_CMP1();
         }
-        pub fn PORTA_PORT() void {
-            zcd.handlePort();
+        pub fn AC0_AC() void {
+            zcd.handleInterruptAC();
         }
     };
 };

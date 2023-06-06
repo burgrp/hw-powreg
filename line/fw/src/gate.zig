@@ -36,7 +36,7 @@ pub fn at(comptime timer: *volatile microzig.chip.types.peripherals.TCA, comptim
             timer.SINGLE.CTRLA.modify(.{ .ENABLE = 1 });
         }
 
-        pub fn handleTimerOVF() void {
+        pub fn handleInterruptTCA_OVF() void {
             // gate off
             port.OUTCLR = 1 << pin;
             // stop timer
@@ -47,14 +47,14 @@ pub fn at(comptime timer: *volatile microzig.chip.types.peripherals.TCA, comptim
             timer.SINGLE.INTFLAGS.modify(.{ .OVF = 1 });
         }
 
-        pub fn handleTimerCMP0() void {
+        pub fn handleInterruptTCA_CMP0() void {
             // gate on
             port.OUTSET = 1 << pin;
             // clear interrupt flag
             timer.SINGLE.INTFLAGS.modify(.{ .CMP0 = 1 });
         }
 
-        pub fn handleTimerCMP1() void {
+        pub fn handleInterruptTCA_CMP1() void {
             // gate off
             port.OUTCLR = 1 << pin;
             // clear interrupt flag

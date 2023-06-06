@@ -1,16 +1,32 @@
 const microzig = @import("microzig");
 const std = @import("std");
 
-pub fn at(comptime port: *volatile microzig.chip.types.peripherals.PORT, comptime pin: u3, comptime zeroCrossHandler: *const fn () void) type {
+pub fn at(comptime comparator: *volatile microzig.chip.types.peripherals.AC, comptime vref: *volatile microzig.chip.types.peripherals.VREF, comptime zeroCrossHandler: *const fn () void) type {
     return struct {
         pub fn init() void {
-            @field(port, std.fmt.comptimePrint("PIN{}CTRL", .{pin})).modify(.{ .PULLUPEN = 0, .ISC = .{ .value = .BOTHEDGES } });
+            vref.CTRLA.modify(.{
+                .DAC0REFSEL = .{ .value = .@"1V5" },
+            });
+            vref.CTRLB.modify(.{
+                .DAC0REFEN = 1,
+            });
+            comparator.MUXCTRLA.modify(.{
+                .MUXNEG = .{ .value = .VREF },
+            });
+            comparator.INTCTRL.modify(.{
+                .CMP = 1,
+            });
+            comparator.CTRLA.modify(.{
+                .ENABLE = 1,
+                .HYSMODE = .{ .value = .@"50mV" },
+                .INTMODE = .{ .value = .BOTHEDGE },
+            });
         }
 
-        pub fn handlePort() void {
-            if ((port.INTFLAGS.read().INT & (1 << pin)) != 0) {
+        pub fn handleInterruptAC() void {
+            if (comparator.STATUS.read().CMP == 1) {
                 zeroCrossHandler();
-                port.INTFLAGS.write(.{ .INT = 1 << pin });
+                comparator.STATUS.modify(.{ .CMP = 1 });
             }
         }
     };
