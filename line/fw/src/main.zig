@@ -11,9 +11,9 @@ const STATUS_PIN = 2;
 const GATE_PIN = 3;
 const ZCD_PIN = 1;
 
-const status = Status.at(peripherals.PORTA, STATUS_PIN);
-const gate = Gate.at(peripherals.TCA0, peripherals.PORTA, GATE_PIN, status.gateStatus);
+const gate = Gate.at(peripherals.TCA0, peripherals.PORTA, GATE_PIN);
 const zcd = ZCD.at(peripherals.AC0, peripherals.VREF, gate.zeroCross);
+const status = Status.at(peripherals.PORTA, STATUS_PIN, peripherals.RTC);
 
 pub const microzig_options = struct {
     pub const interrupts = struct {
@@ -23,14 +23,19 @@ pub const microzig_options = struct {
         pub fn TCA0_CMP0() void {
             gate.handleInterruptTCA_CMP0();
         }
-        pub fn TCA0_CMP1() void {
-            gate.handleInterruptTCA_CMP1();
-        }
-        pub fn AC0_AC() callconv(.Interrupt) void {
+        pub fn AC0_AC() void {
             zcd.handleInterruptAC();
+        }
+        pub fn RTC_PIT() void {
+            status.handleInterruptRTC_PIT();
         }
     };
 };
+
+pub fn update() void {
+    status.setDuty(gate.getDuty());
+    status.setSynchronized(gate.isSynchronized());
+}
 
 pub fn main() void {
     // CPU at 10MHz
@@ -40,7 +45,7 @@ pub fn main() void {
     status.init();
 
     gate.init();
-    gate.setDuty(0x10);
+    gate.setDuty(128);
 
     zcd.init();
 
@@ -49,5 +54,6 @@ pub fn main() void {
     peripherals.SLPCTRL.CTRLA.modify(.{ .SMODE = .{ .value = .IDLE }, .SEN = 1 });
     while (true) {
         asm volatile ("sleep");
+        update();
     }
 }

@@ -4,7 +4,6 @@ pub fn at(
     comptime timer: *volatile microzig.chip.types.peripherals.TCA,
     comptime port: *volatile microzig.chip.types.peripherals.PORT,
     comptime pin: u3,
-    comptime statusCallback: *const fn (synced: bool) void,
 ) type {
     return struct {
         var duty: u8 = 0;
@@ -14,20 +13,22 @@ pub fn at(
         pub fn init() void {
 
             // timer at 2.5MHz, overflow at ~38Hz
-            timer.SINGLE.INTCTRL.modify(.{ .OVF = 1, .CMP0 = 1 }); //, .CMP1 = 1 });
-            timer.SINGLE.CTRLA.modify(.{ .ENABLE = 1, .CLKSEL = .{ .value = .DIV4 } });
+            timer.SINGLE.INTCTRL.modify(.{ .OVF = 1, .CMP0 = 1 });
+            timer.SINGLE.CTRLA.modify(.{ .ENABLE = 0, .CLKSEL = .{ .value = .DIV4 } });
 
             port.DIRSET = @as(u8, 1) << pin;
-
-            updateStatus();
-        }
-
-        pub fn updateStatus() void {
-            statusCallback(period > 0);
         }
 
         pub fn setDuty(new_duty: u8) void {
             duty = new_duty;
+        }
+
+        pub fn getDuty() u8 {
+            return duty;
+        }
+
+        pub fn isSynchronized() bool {
+            return period > 0;
         }
 
         pub fn zeroCross() void {
@@ -48,13 +49,11 @@ pub fn at(
             }
 
             timer.SINGLE.CTRLA.modify(.{ .ENABLE = 1 });
-            updateStatus();
         }
 
         pub fn handleInterruptTCA_OVF() void {
             timer.SINGLE.CTRLA.modify(.{ .ENABLE = 0 });
             period = 0;
-            updateStatus();
 
             timer.SINGLE.INTFLAGS.modify(.{ .OVF = 1 });
         }
@@ -62,10 +61,6 @@ pub fn at(
         pub fn handleInterruptTCA_CMP0() void {
             port.OUTCLR = 1 << pin;
             timer.SINGLE.INTFLAGS.modify(.{ .CMP0 = 1 });
-        }
-
-        pub fn handleInterruptTCA_CMP1() void {
-            timer.SINGLE.INTFLAGS.modify(.{ .CMP1 = 1 });
         }
     };
 }
