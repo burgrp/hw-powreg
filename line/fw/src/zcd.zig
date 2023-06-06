@@ -1,16 +1,17 @@
 const microzig = @import("microzig");
+const std = @import("std");
 
-port: *volatile microzig.chip.types.peripherals.PORT = undefined,
-pin: u3 = undefined,
+pub fn at(comptime port: *volatile microzig.chip.types.peripherals.PORT, comptime pin: u3, comptime zeroCrossHandler: *const fn () void) type {
+    return struct {
+        pub fn init() void {
+            @field(port, std.fmt.comptimePrint("PIN{}CTRL", .{pin})).modify(.{ .PULLUPEN = 0, .ISC = .{ .value = .BOTHEDGES } });
+        }
 
-duty: u8 = 0,
-
-const Self = @This();
-
-pub fn init(self: *Self) void {
-    self.port.DIRSET = @as(u8, 1) << self.pin;
-}
-
-pub fn setDuty(self: *Self, new_duty: u8) void {
-    self.duty = new_duty;
+        pub fn handlePort() void {
+            if ((port.INTFLAGS.read().INT & (1 << pin)) != 0) {
+                zeroCrossHandler();
+                port.INTFLAGS.write(.{ .INT = 1 << pin });
+            }
+        }
+    };
 }
