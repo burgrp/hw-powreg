@@ -1,4 +1,4 @@
-PORT ?= /dev/ttyUSB0
+PORT ?= ~/updi
 
 .PHONY: all
 all: flash
