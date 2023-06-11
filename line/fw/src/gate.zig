@@ -6,8 +6,8 @@ pub fn at(
     comptime pin: u3,
 ) type {
     return struct {
-        var duty: u8 = 0;
-        var period: u16 = 0;
+        pub var duty: u8 = 0;
+        pub var period: u16 = 0;
 
         // This assumes that the CPU is running at 10MHz.
         pub fn init() void {
@@ -17,14 +17,6 @@ pub fn at(
             timer.SINGLE.CTRLA.modify(.{ .ENABLE = 0, .CLKSEL = .{ .value = .DIV4 } });
 
             port.DIRSET = @as(u8, 1) << pin;
-        }
-
-        pub fn setDuty(new_duty: u8) void {
-            duty = new_duty;
-        }
-
-        pub fn getDuty() u8 {
-            return duty;
         }
 
         pub fn isSynchronized() bool {

@@ -4,6 +4,7 @@ const Gate = @import("gate.zig");
 const ZCD = @import("zcd.zig");
 const Status = @import("status.zig");
 const I2C = @import("i2c.zig");
+const ADC = @import("adc.zig");
 
 //const peripherals = @import("../deps/microzig-avr/src/chips/ATtiny412.zig").devices.ATtiny412.peripherals;
 const peripherals = microzig.chip.peripherals;
@@ -15,6 +16,7 @@ const gate = Gate.at(peripherals.TCA0, peripherals.PORTA, GATE_PIN);
 const zcd = ZCD.at(peripherals.AC0, peripherals.VREF, gate.zeroCross);
 const status = Status.at(peripherals.PORTA, STATUS_PIN, peripherals.RTC);
 const i2c = I2C.at(peripherals.TWI0);
+const adc = ADC.at(peripherals.ADC0);
 
 pub const microzig_options = struct {
     pub const interrupts = struct {
@@ -33,14 +35,22 @@ pub const microzig_options = struct {
         pub fn TWI0_TWIS() void {
             i2c.handleInterruptTWIS();
         }
+        pub fn ADC0_RESRDY() void {
+            adc.handleInterruptADC_RESRDY();
+        }
     };
 };
 
 pub fn update() void {
-    gate.setDuty(i2c.rxBuffer.data.duty);
-    status.setDuty(gate.getDuty());
-    status.setSynchronized(gate.isSynchronized());
-    i2c.txBuffer.data.status.grid_sync = if (gate.isSynchronized()) 1 else 0;
+    var duty = i2c.rxBuffer.data.duty;
+    var synchronized = gate.isSynchronized();
+
+    gate.duty = duty;
+
+    status.duty = duty;
+    status.synchronized = synchronized;
+
+    i2c.txBuffer.data.status.grid_sync = if (synchronized) 1 else 0;
     i2c.txBuffer.data.chip_temp = 20;
 }
 
@@ -52,10 +62,11 @@ pub fn main() void {
     status.init();
 
     gate.init();
-    gate.setDuty(128);
 
     zcd.init();
     i2c.init(50);
+
+    adc.init();
 
     microzig.cpu.enable_interrupts();
 

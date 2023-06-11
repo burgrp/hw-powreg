@@ -7,16 +7,16 @@ pub fn at(
     comptime twi: *volatile microzig.chip.types.peripherals.TWI,
 ) type {
     return struct {
-        pub var rxBuffer: union {
-            data: struct {
+        pub var rxBuffer: packed union {
+            data: packed struct {
                 duty: u8,
                 crc: u8,
             },
             raw: [2]u8,
         } = undefined;
 
-        pub var txBuffer: union {
-            data: struct {
+        pub var txBuffer: packed union {
+            data: packed struct {
                 protocol: u8 = protocol_version,
                 status: packed struct {
                     grid_sync: u1,
