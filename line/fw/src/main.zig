@@ -42,7 +42,7 @@ pub const microzig_options = struct {
 };
 
 pub fn update() void {
-    var duty = i2c.rxBuffer.data.duty;
+    var duty = i2c.rxBuffer.duty;
     var synchronized = gate.isSynchronized();
 
     gate.duty = duty;
@@ -50,8 +50,8 @@ pub fn update() void {
     status.duty = duty;
     status.synchronized = synchronized;
 
-    i2c.txBuffer.data.status.grid_sync = if (synchronized) 1 else 0;
-    i2c.txBuffer.data.chip_temp = 20;
+    i2c.txBuffer.status.grid_sync = if (synchronized) 1 else 0;
+    i2c.txBuffer.chip_temp = 20;
 }
 
 pub fn main() void {

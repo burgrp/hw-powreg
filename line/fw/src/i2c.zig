@@ -7,30 +7,24 @@ pub fn at(
     comptime twi: *volatile microzig.chip.types.peripherals.TWI,
 ) type {
     return struct {
-        pub var rxBuffer: packed union {
-            data: packed struct {
-                duty: u8,
-                crc: u8,
-            },
-            raw: [2]u8,
+        pub var rxBuffer: packed struct {
+            duty: u8,
+            crc: u8,
         } = undefined;
 
-        pub var txBuffer: packed union {
-            data: packed struct {
-                protocol: u8 = protocol_version,
-                status: packed struct {
-                    grid_sync: u1,
-                    rx_crc_error: u1,
-                    reserved: u6,
-                },
-                chip_temp: u8,
-                crc: u8,
+        pub var txBuffer: packed struct {
+            protocol: u8 = protocol_version,
+            status: packed struct {
+                grid_sync: u1,
+                rx_crc_error: u1,
+                reserved: u6,
             },
-            raw: [4]u8,
+            chip_temp: u8,
+            crc: u8,
         } = undefined;
 
-        var rxPeriBuffer: @TypeOf(rxBuffer.raw) = undefined;
-        var txPeriBuffer: @TypeOf(txBuffer.raw) = undefined;
+        var rxPeriBuffer: [@sizeOf(@TypeOf(rxBuffer))]u8 = undefined;
+        var txPeriBuffer: [@sizeOf(@TypeOf(txBuffer))]u8 = undefined;
 
         var cnt: u8 = 0;
 
@@ -56,10 +50,10 @@ pub fn at(
                             crc ^= byte;
                         }
                         if (crc == 0xAA) {
-                            rxBuffer.raw = rxPeriBuffer;
-                            txBuffer.data.status.rx_crc_error = 0;
+                            rxBuffer = @bitCast(@TypeOf(rxBuffer), rxPeriBuffer);
+                            txBuffer.status.rx_crc_error = 0;
                         } else {
-                            txBuffer.data.status.rx_crc_error = 1;
+                            txBuffer.status.rx_crc_error = 1;
                         }
                     }
                 }
@@ -69,7 +63,7 @@ pub fn at(
             if (status.APIF == 1) {
                 cnt = 0;
                 if (status.DIR == 1) {
-                    txPeriBuffer = txBuffer.raw;
+                    txPeriBuffer = @bitCast(@TypeOf(txPeriBuffer), txBuffer);
                     var crc: u8 = 0xAA;
                     for (txPeriBuffer[0 .. txPeriBuffer.len - 1]) |byte| {
                         crc ^= byte;
