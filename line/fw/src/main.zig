@@ -13,7 +13,7 @@ const watchDog = WatchDog.at(peripherals.WDT);
 const gate = Gate.at(peripherals.TCA0, peripherals.PORTB, 2);
 const zcd = ZCD.at(peripherals.AC0, peripherals.VREF, gate.zeroCross);
 const status = Status.at(peripherals.PORTB, 3, peripherals.RTC);
-const i2c = I2C.at(peripherals.TWI0);
+const i2c = I2C.at(peripherals.TWI0, peripherals.PORTA, 4, 3);
 const tempSense = TempSense.at(peripherals.ADC0);
 
 pub const microzig_options = struct {

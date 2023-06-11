@@ -3,6 +3,9 @@ const std = @import("std");
 
 pub fn at(
     comptime twi: *volatile microzig.chip.types.peripherals.TWI,
+    comptime addrPort: *volatile microzig.chip.types.peripherals.PORT,
+    comptime addrPin0: u3,
+    comptime addrPinCount: u3,
 ) type {
     return struct {
         pub var rxBuffer: packed struct {
@@ -29,7 +32,17 @@ pub fn at(
 
         var cnt: u8 = 0;
 
-        pub fn init(addr: u7) void {
+        pub fn init(baseAddr: u7) void {
+            inline for (0..addrPinCount) |i| {
+                @field(addrPort, std.fmt.comptimePrint("PIN{}CTRL", .{addrPin0 + i})).modify(.{ .PULLUPEN = 1, .INVEN = 1 });
+            }
+            // Wait for pullup
+            for (0..1000) |_| {
+                asm volatile ("nop");
+            }
+            var addrMask: u8 = ((1 << addrPinCount) - 1) << addrPin0;
+            var addr = baseAddr + ((addrPort.IN & addrMask) >> addrPin0);
+
             twi.SADDR = addr << 1;
             twi.SCTRLA.modify(.{ .DIEN = 1, .APIEN = 1, .SMEN = 1, .ENABLE = 1 });
             txBuffer.protocol = 1;
