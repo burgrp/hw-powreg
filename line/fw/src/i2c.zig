@@ -19,7 +19,7 @@ pub fn at(
                 rx_crc_error: u1,
                 reserved: u6,
             },
-            chip_temp: u8,
+            chip_temp: u16,
             crc: u8,
         } = undefined;
 

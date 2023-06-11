@@ -5,7 +5,7 @@ pub fn at(comptime comparator: *volatile microzig.chip.types.peripherals.AC, com
     return struct {
         pub fn init() void {
             vref.CTRLA.modify(.{
-                .DAC0REFSEL = .{ .value = .@"1V5" },
+                .DAC0REFSEL = .{ .value = .@"1V1" },
             });
             vref.CTRLB.modify(.{
                 .DAC0REFEN = 1,

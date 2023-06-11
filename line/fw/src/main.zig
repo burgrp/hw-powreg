@@ -51,7 +51,7 @@ pub fn update() void {
     status.synchronized = synchronized;
 
     i2c.txBuffer.status.grid_sync = if (synchronized) 1 else 0;
-    i2c.txBuffer.chip_temp = 20;
+    i2c.txBuffer.chip_temp = adc.chip_temp;
 }
 
 pub fn main() void {
