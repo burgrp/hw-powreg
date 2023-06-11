@@ -1,8 +1,6 @@
 const microzig = @import("microzig");
 const std = @import("std");
 
-const protocol_version = 1;
-
 pub fn at(
     comptime twi: *volatile microzig.chip.types.peripherals.TWI,
 ) type {
@@ -13,7 +11,7 @@ pub fn at(
         } = undefined;
 
         pub var txBuffer: packed struct {
-            protocol: u8 = protocol_version,
+            protocol: u8,
             status: packed struct {
                 grid_sync: u1,
                 rx_crc_error: u1,
@@ -31,6 +29,7 @@ pub fn at(
         pub fn init(addr: u7) void {
             twi.SADDR = addr << 1;
             twi.SCTRLA.modify(.{ .DIEN = 1, .APIEN = 1, .SMEN = 1, .ENABLE = 1 });
+            txBuffer.protocol = 1;
         }
 
         pub fn handleInterruptTWIS() void {
