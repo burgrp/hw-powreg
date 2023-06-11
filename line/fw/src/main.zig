@@ -6,6 +6,7 @@ const ZCD = @import("zcd.zig");
 const Status = @import("status.zig");
 const I2C = @import("i2c.zig");
 const TempSense = @import("tempsense.zig");
+const Fan = @import("fan.zig");
 
 const peripherals = microzig.chip.peripherals;
 
@@ -13,8 +14,9 @@ const watchDog = WatchDog.at(peripherals.WDT);
 const gate = Gate.at(peripherals.TCA0, peripherals.PORTB, 2);
 const zcd = ZCD.at(peripherals.AC0, peripherals.VREF, gate.zeroCross);
 const status = Status.at(peripherals.PORTB, 3, peripherals.RTC);
-const i2c = I2C.at(peripherals.TWI0, peripherals.PORTA, 4, 3);
-const tempSense = TempSense.at(peripherals.ADC0);
+const i2c = I2C.at(peripherals.TWI0, peripherals.PORTA, 1, 3);
+const tempSense = TempSense.at(peripherals.ADC0, 4, 6);
+const fan = Fan.at(peripherals.TCB0);
 
 pub const microzig_options = struct {
     pub const interrupts = struct {
@@ -40,15 +42,14 @@ pub const microzig_options = struct {
 };
 
 pub fn update() void {
-    var duty = i2c.rxBuffer.duty;
+    gate.duty = i2c.rxBuffer.power_duty;
+    status.duty = i2c.rxBuffer.power_duty;
+    fan.setDuty(i2c.rxBuffer.fan_duty);
+
     var synchronized = gate.isSynchronized();
-
-    gate.duty = duty;
-
-    status.duty = duty;
     status.synchronized = synchronized;
-
     i2c.txBuffer.status.grid_sync = if (synchronized) 1 else 0;
+
     i2c.txBuffer.mosfet_temp1 = tempSense.mosfet_temp[0];
     i2c.txBuffer.mosfet_temp2 = tempSense.mosfet_temp[1];
 
@@ -64,15 +65,12 @@ pub fn main() void {
     peripherals.CLKCTRL.MCLKCTRLB.modify(.{ .PDIV = .{ .value = .@"2X" } });
 
     watchDog.init();
-
     status.init();
-
     gate.init();
-
     zcd.init();
     i2c.init(50);
-
     tempSense.init();
+    fan.init();
 
     microzig.cpu.enable_interrupts();
 

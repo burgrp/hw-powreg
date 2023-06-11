@@ -9,7 +9,8 @@ pub fn at(
 ) type {
     return struct {
         pub var rxBuffer: packed struct {
-            duty: u8,
+            power_duty: u8,
+            fan_duty: u8,
             crc: u8,
         } = undefined;
 
