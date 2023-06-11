@@ -12,4 +12,4 @@ build:
 .PHONY: flash
 flash: build
 	avr-objcopy -O ihex zig-out/bin/app zig-out/bin/app.hex
-	pymcuprog -t uart -d attiny412 -u $(PORT) --erase write -f zig-out/bin/app.hex --verify
+	pymcuprog -t uart -d attiny414 -u $(PORT) --erase write -f zig-out/bin/app.hex --verify

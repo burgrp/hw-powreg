@@ -1,22 +1,20 @@
 const microzig = @import("microzig");
 
+const WatchDog = @import("watchdog.zig");
 const Gate = @import("gate.zig");
 const ZCD = @import("zcd.zig");
 const Status = @import("status.zig");
 const I2C = @import("i2c.zig");
-const ADC = @import("adc.zig");
+const TempSense = @import("tempsense.zig");
 
-//const peripherals = @import("../deps/microzig-avr/src/chips/ATtiny412.zig").devices.ATtiny412.peripherals;
 const peripherals = microzig.chip.peripherals;
 
-const STATUS_PIN = 6;
-const GATE_PIN = 3;
-
-const gate = Gate.at(peripherals.TCA0, peripherals.PORTA, GATE_PIN);
+const watchDog = WatchDog.at(peripherals.WDT);
+const gate = Gate.at(peripherals.TCA0, peripherals.PORTB, 2);
 const zcd = ZCD.at(peripherals.AC0, peripherals.VREF, gate.zeroCross);
-const status = Status.at(peripherals.PORTA, STATUS_PIN, peripherals.RTC);
+const status = Status.at(peripherals.PORTB, 3, peripherals.RTC);
 const i2c = I2C.at(peripherals.TWI0);
-const adc = ADC.at(peripherals.ADC0);
+const tempSense = TempSense.at(peripherals.ADC0);
 
 pub const microzig_options = struct {
     pub const interrupts = struct {
@@ -36,7 +34,7 @@ pub const microzig_options = struct {
             i2c.handleInterruptTWIS();
         }
         pub fn ADC0_RESRDY() void {
-            adc.handleInterruptADC_RESRDY();
+            tempSense.handleInterruptADC_RESRDY();
         }
     };
 };
@@ -51,13 +49,21 @@ pub fn update() void {
     status.synchronized = synchronized;
 
     i2c.txBuffer.status.grid_sync = if (synchronized) 1 else 0;
-    i2c.txBuffer.chip_temp = adc.chip_temp;
+    i2c.txBuffer.mosfet_temp1 = tempSense.mosfet_temp[0];
+    i2c.txBuffer.mosfet_temp2 = tempSense.mosfet_temp[1];
+
+    if (i2c.watchDogFlag) {
+        watchDog.reset();
+        i2c.watchDogFlag = false;
+    }
 }
 
 pub fn main() void {
     // CPU at 10MHz
     peripherals.CPU.CCP.write_raw(0xD8);
     peripherals.CLKCTRL.MCLKCTRLB.modify(.{ .PDIV = .{ .value = .@"2X" } });
+
+    watchDog.init();
 
     status.init();
 
@@ -66,7 +72,7 @@ pub fn main() void {
     zcd.init();
     i2c.init(50);
 
-    adc.init();
+    tempSense.init();
 
     microzig.cpu.enable_interrupts();
 

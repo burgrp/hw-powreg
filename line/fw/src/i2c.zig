@@ -17,9 +17,12 @@ pub fn at(
                 rx_crc_error: u1,
                 reserved: u6,
             },
-            chip_temp: u16,
+            mosfet_temp1: u16,
+            mosfet_temp2: u16,
             crc: u8,
         } = undefined;
+
+        pub var watchDogFlag: bool = false;
 
         var rxPeriBuffer: [@sizeOf(@TypeOf(rxBuffer))]u8 = undefined;
         var txPeriBuffer: [@sizeOf(@TypeOf(txBuffer))]u8 = undefined;
@@ -51,6 +54,7 @@ pub fn at(
                         if (crc == 0xAA) {
                             rxBuffer = @bitCast(@TypeOf(rxBuffer), rxPeriBuffer);
                             txBuffer.status.rx_crc_error = 0;
+                            watchDogFlag = true;
                         } else {
                             txBuffer.status.rx_crc_error = 1;
                         }
